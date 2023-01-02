@@ -15,8 +15,14 @@ fn get_fields(data: &syn::Data) -> syn::punctuated::Punctuated<syn::Field, syn::
     input
 }
 
-#[proc_macro_derive(FromInner)]
-pub fn from_inner_derive(input: TokenStream) -> TokenStream {
+/// Implements `From<Self>` for `Inner` and `From<Inner>` for `Self`, 
+/// where `Inner` is a touple of all inner types of the struct in the same order as in the struct
+/// declaration.
+/// 
+/// If the struct only contains one field, the `Inner` is simple the inner value, not a one-element
+/// touple
+#[proc_macro_derive(FromIntoInner)]
+pub fn from_into_inner_derive(input: TokenStream) -> TokenStream {
     let ast = syn::parse_macro_input!(input as syn::DeriveInput);
 
     let self_ident = &ast.ident;
